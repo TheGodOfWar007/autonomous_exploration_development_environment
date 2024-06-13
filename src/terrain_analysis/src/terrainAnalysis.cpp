@@ -347,6 +347,7 @@ int main(int argc, char **argv) {
         }
       }
 
+      // update the terrain voxel cloud
       for (int ind = 0; ind < terrainVoxelNum; ind++) {
         if (terrainVoxelUpdateNum[ind] >= voxelPointUpdateThre ||
             laserCloudTime - systemInitTime - terrainVoxelUpdateTime[ind] >=
@@ -380,6 +381,7 @@ int main(int argc, char **argv) {
         }
       }
 
+      // nearby patches as terrain cloud 
       terrainCloud->clear();
       for (int indX = terrainVoxelHalfWidth - 5;
            indX <= terrainVoxelHalfWidth + 5; indX++) {
@@ -414,6 +416,7 @@ int main(int argc, char **argv) {
           indY--;
 
         if (point.z - vehicleZ > minRelZ && point.z - vehicleZ < maxRelZ) {
+          // use 3x3 patch for elevation calculation
           for (int dX = -1; dX <= 1; dX++) {
             for (int dY = -1; dY <= 1; dY++) {
               if (indX + dX >= 0 && indX + dX < planarVoxelWidth &&
@@ -500,6 +503,7 @@ int main(int argc, char **argv) {
       }
 
       if (useSorting) {
+        // calculate elevation by quantile, limit ground lift
         for (int i = 0; i < planarVoxelNum; i++) {
           int planarPointElevSize = planarPointElev[i].size();
           if (planarPointElevSize > 0) {
@@ -521,6 +525,7 @@ int main(int argc, char **argv) {
           }
         }
       } else {
+        // use the lowest point as elevation
         for (int i = 0; i < planarVoxelNum; i++) {
           int planarPointElevSize = planarPointElev[i].size();
           if (planarPointElevSize > 0) {
