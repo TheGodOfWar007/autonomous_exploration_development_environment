@@ -34,6 +34,7 @@ const double PI = 3.1415926;
 #define PLOTPATHSET 1
 
 string pathFolder;
+bool goalReached = true;
 double vehicleLength = 0.6;
 double vehicleWidth = 0.6;
 double sensorOffsetX = 0;
@@ -237,6 +238,7 @@ void joystickHandler(const sensor_msgs::Joy::ConstPtr& joy)
 
 void goalHandler(const geometry_msgs::PointStamped::ConstPtr& goal)
 {
+  goalReached = false;
   goalX = goal->point.x;
   goalY = goal->point.y;
 }
@@ -607,7 +609,7 @@ int main(int argc, char** argv)
   while (status) {
     ros::spinOnce();
 
-    if (newLaserCloud || newTerrainCloud) {
+    if (!goalReached && (newLaserCloud || newTerrainCloud)) {
       if (newLaserCloud) {
         newLaserCloud = false;
 
@@ -694,6 +696,7 @@ int main(int argc, char** argv)
         float relativeGoalY = (-(goalX - vehicleX) * sinVehicleYaw + (goalY - vehicleY) * cosVehicleYaw);
 
         relativeGoalDis = sqrt(relativeGoalX * relativeGoalX + relativeGoalY * relativeGoalY);
+        if(relativeGoalDis < 0.1) goalReached = true;
         joyDir = atan2(relativeGoalY, relativeGoalX) * 180 / PI;
 
         if (!twoWayDrive) {
@@ -941,7 +944,27 @@ int main(int argc, char** argv)
       plannerCloud2.header.frame_id = "vehicle";
       pubLaserCloud.publish(plannerCloud2);*/
     }
+    
+    if(goalReached)
+    {
+      path.poses.resize(1);
+      path.poses[0].pose.position.x = 0;
+      path.poses[0].pose.position.y = 0;
+      path.poses[0].pose.position.z = 0;
 
+      path.header.stamp = ros::Time().fromSec(odomTime);
+      path.header.frame_id = "vehicle";
+      pubPath.publish(path);
+
+      #if PLOTPATHSET == 1
+      freePaths->clear();
+      sensor_msgs::PointCloud2 freePaths2;
+      pcl::toROSMsg(*freePaths, freePaths2);
+      freePaths2.header.stamp = ros::Time().fromSec(odomTime);
+      freePaths2.header.frame_id = "vehicle";
+      pubFreePaths.publish(freePaths2);
+      #endif
+    }
     status = ros::ok();
     rate.sleep();
   }
