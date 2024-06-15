@@ -1,5 +1,6 @@
 #include "waypoint_tool.h"
-
+#include <rviz/visualization_manager.h>
+#include <QTimer>
 namespace rviz
 {
 WaypointTool::WaypointTool()
@@ -8,6 +9,10 @@ WaypointTool::WaypointTool()
 
   topic_property_ = new StringProperty("Topic", "waypoint", "The topic on which to publish navigation waypionts.",
                                        getPropertyContainer(), SLOT(updateTopic()), this);
+
+  QTimer* timer = new QTimer(this);
+  connect(timer, &QTimer::timeout, this, &WaypointTool::updateWorldFrame);
+  timer->start(1000); // Check every second
 }
 
 void WaypointTool::onInitialize()
@@ -60,7 +65,7 @@ void WaypointTool::onPoseSet(double x, double y, double theta)
   pub_joy_.publish(joy);
 
   geometry_msgs::PointStamped waypoint;
-  waypoint.header.frame_id = "map";
+  waypoint.header.frame_id = world_frame_;
   waypoint.header.stamp = joy.header.stamp;
   waypoint.point.x = x;
   waypoint.point.y = y;
@@ -70,6 +75,16 @@ void WaypointTool::onPoseSet(double x, double y, double theta)
   usleep(10000);
   pub_.publish(waypoint);
 }
+
+void WaypointTool::updateWorldFrame()
+{
+  std::string current_frame = context_->getFrameManager()->getFixedFrame();
+  if (world_frame_ != current_frame)
+  {
+    world_frame_ = current_frame;
+    ROS_INFO("World frame updated to: %s", world_frame_.c_str());
+  }}
+
 }
 
 #include <pluginlib/class_list_macros.hpp>

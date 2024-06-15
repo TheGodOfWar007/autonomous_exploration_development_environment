@@ -34,6 +34,8 @@ protected:
 private Q_SLOTS:
   void updateTopic();
 
+  void updateWorldFrame();
+
 private:
   float vehicle_z;
 
@@ -41,6 +43,7 @@ private:
   ros::Subscriber sub_;
   ros::Publisher pub_;
   ros::Publisher pub_joy_;
+  std::string world_frame_;
 
   StringProperty* topic_property_;
 };

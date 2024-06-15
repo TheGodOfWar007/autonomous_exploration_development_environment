@@ -46,6 +46,7 @@ double terrainUnderVehicle = -0.75;
 double terrainConnThre = 0.5;
 double ceilingFilteringThre = 2.0;
 double localTerrainMapRadius = 4.0;
+string world_frame = "map";
 
 // terrain voxel parameters
 float terrainVoxelSize = 2.0;
@@ -189,6 +190,7 @@ int main(int argc, char** argv)
   nhPrivate.getParam("terrainConnThre", terrainConnThre);
   nhPrivate.getParam("ceilingFilteringThre", ceilingFilteringThre);
   nhPrivate.getParam("localTerrainMapRadius", localTerrainMapRadius);
+  nhPrivate.getParam("world_frame", world_frame);
 
   ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry>("/state_estimation", 5, odometryHandler);
 
@@ -532,7 +534,7 @@ int main(int argc, char** argv)
       sensor_msgs::PointCloud2 terrainCloud2;
       pcl::toROSMsg(*terrainCloudElev, terrainCloud2);
       terrainCloud2.header.stamp = ros::Time().fromSec(laserCloudTime);
-      terrainCloud2.header.frame_id = "map";
+      terrainCloud2.header.frame_id = world_frame;
       pubTerrainCloud.publish(terrainCloud2);
     }
 

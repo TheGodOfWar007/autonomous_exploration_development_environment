@@ -29,6 +29,7 @@ const double PI = 3.1415926;
 
 string stateEstimationTopic = "/integrated_to_init";
 string registeredScanTopic = "/velodyne_cloud_registered";
+string world_frame = "map";
 bool flipStateEstimation = true;
 bool flipRegisteredScan = true;
 bool sendTF = true;
@@ -63,13 +64,13 @@ void odometryHandler(const nav_msgs::Odometry::ConstPtr& odom)
   }
 
   // publish odometry messages
-  odomData.header.frame_id = "map";
+  odomData.header.frame_id = world_frame;
   odomData.child_frame_id = "sensor";
   pubOdometryPointer->publish(odomData);
 
   // publish tf messages
   odomTrans.stamp_ = odom->header.stamp;
-  odomTrans.frame_id_ = "map";
+  odomTrans.frame_id_ = world_frame;
   odomTrans.child_frame_id_ = "sensor";
   odomTrans.setRotation(tf::Quaternion(geoQuat.x, geoQuat.y, geoQuat.z, geoQuat.w));
   odomTrans.setOrigin(tf::Vector3(odomData.pose.pose.position.x, odomData.pose.pose.position.y, odomData.pose.pose.position.z));
@@ -78,7 +79,7 @@ void odometryHandler(const nav_msgs::Odometry::ConstPtr& odom)
     if (!reverseTF) {
       tfBroadcasterPointer->sendTransform(odomTrans);
     } else {
-      tfBroadcasterPointer->sendTransform(tf::StampedTransform(odomTrans.inverse(), odom->header.stamp, "sensor", "map"));
+      tfBroadcasterPointer->sendTransform(tf::StampedTransform(odomTrans.inverse(), odom->header.stamp, "sensor", world_frame));
     }
   }
 }
@@ -102,7 +103,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr& laserCloudIn)
   sensor_msgs::PointCloud2 laserCloud2;
   pcl::toROSMsg(*laserCloud, laserCloud2);
   laserCloud2.header.stamp = laserCloudIn->header.stamp;
-  laserCloud2.header.frame_id = "map";
+  laserCloud2.header.frame_id = world_frame;
   pubLaserCloudPointer->publish(laserCloud2);
 }
 
@@ -118,6 +119,7 @@ int main(int argc, char** argv)
   nhPrivate.getParam("flipRegisteredScan", flipRegisteredScan);
   nhPrivate.getParam("sendTF", sendTF);
   nhPrivate.getParam("reverseTF", reverseTF);
+  nhPrivate.getParam("world_frame", world_frame);
 
   ros::Subscriber subOdometry = nh.subscribe<nav_msgs::Odometry> (stateEstimationTopic, 5, odometryHandler);
 

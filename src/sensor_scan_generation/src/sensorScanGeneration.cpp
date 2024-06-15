@@ -31,6 +31,7 @@ double pitch = 0;
 double yaw = 0;
 
 bool newTransformToMap = false;
+string world_frame = "map";
 
 nav_msgs::Odometry odometryIn;
 ros::Publisher *pubOdometryPointer = NULL;
@@ -76,12 +77,12 @@ void laserCloudAndOdometryHandler(const nav_msgs::Odometry::ConstPtr& odometry,
   }
 
   odometryIn.header.stamp = laserCloud2->header.stamp;
-  odometryIn.header.frame_id = "map";
+  odometryIn.header.frame_id = world_frame;
   odometryIn.child_frame_id = "sensor_at_scan";
   pubOdometryPointer->publish(odometryIn);
 
   transformToMap.stamp_ = laserCloud2->header.stamp;
-  transformToMap.frame_id_ = "map";
+  transformToMap.frame_id_ = world_frame;
   transformToMap.child_frame_id_ = "sensor_at_scan";
   tfBroadcasterPointer->sendTransform(transformToMap);
 
@@ -98,6 +99,7 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   ros::NodeHandle nhPrivate = ros::NodeHandle("~");
 
+  nhPrivate.getParam("world_frame", world_frame);
   // ROS message filters
   message_filters::Subscriber<nav_msgs::Odometry> subOdometry;
   message_filters::Subscriber<sensor_msgs::PointCloud2> subLaserCloud;

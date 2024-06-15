@@ -53,6 +53,7 @@ double voxelTimeUpdateThre = 2.0;
 double minRelZ = -1.5;
 double maxRelZ = 0.2;
 double disRatioZ = 0.2;
+string world_frame = "map";
 
 // terrain voxel parameters
 float terrainVoxelSize = 1.0;
@@ -222,6 +223,7 @@ int main(int argc, char **argv) {
   nhPrivate.getParam("minRelZ", minRelZ);
   nhPrivate.getParam("maxRelZ", maxRelZ);
   nhPrivate.getParam("disRatioZ", disRatioZ);
+  nhPrivate.getParam("world_frame", world_frame);
 
   ros::Subscriber subOdometry =
       nh.subscribe<nav_msgs::Odometry>("/state_estimation", 5, odometryHandler);
@@ -391,7 +393,7 @@ int main(int argc, char **argv) {
         }
       }
 
-      // estimate ground and compute elevation for each point
+      // estimate ground and compute elevation for each voxel
       for (int i = 0; i < planarVoxelNum; i++) {
         planarVoxelElev[i] = 0;
         planarVoxelEdge[i] = 0;
@@ -653,7 +655,7 @@ int main(int argc, char **argv) {
       sensor_msgs::PointCloud2 terrainCloud2;
       pcl::toROSMsg(*terrainCloudElev, terrainCloud2);
       terrainCloud2.header.stamp = ros::Time().fromSec(laserCloudTime);
-      terrainCloud2.header.frame_id = "map";
+      terrainCloud2.header.frame_id = world_frame;
       pubLaserCloud.publish(terrainCloud2);
     }
 

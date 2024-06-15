@@ -5,6 +5,9 @@
   <arg name="cameraOffsetZ" default="0"/>
   <arg name="twoWayDrive" default="true"/>
   <arg name="maxSpeed" default="0.75"/>
+  <arg name="maxYawRate" default="45"/>
+  <arg name="maxAccel" default="1"/>
+  <arg name="dirDiffThre" default="0.1"/>
   <arg name="autonomyMode" default="true"/>
   <arg name="autonomySpeed" default="2.0"/>
   <arg name="joyToSpeedDelay" default="2.0"/>
@@ -61,11 +64,11 @@
     <param name="lookAheadDis" type="double" value="0.5" />
     <param name="yawRateGain" type="double" value="7.5" />
     <param name="stopYawRateGain" type="double" value="7.5" />
-    <param name="maxYawRate" type="double" value="20.0" />
+    <param name="maxYawRate" value="$(arg maxYawRate)" />
     <param name="maxSpeed" value="$(arg maxSpeed)" />
-    <param name="maxAccel" type="double" value="1.0" />
+    <param name="maxAccel" value="$(arg maxAccel)" />
     <param name="switchTimeThre" type="double" value="1.0" />
-    <param name="dirDiffThre" type="double" value="0.1" />
+    <param name="dirDiffThre" value="$(arg dirDiffThre)" />
     <param name="stopDisThre" type="double" value="0.2" />
     <param name="slowDwnDisThre" type="double" value="0.85" />
     <param name="useInclRateToSlow" type="bool" value="false" />
