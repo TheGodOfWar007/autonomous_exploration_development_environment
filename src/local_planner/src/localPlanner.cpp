@@ -34,6 +34,7 @@ const double PI = 3.1415926;
 #define PLOTPATHSET 1
 
 string pathFolder;
+string correspondenceFile;
 bool goalReached = true;
 double vehicleLength = 0.6;
 double vehicleWidth = 0.6;
@@ -73,6 +74,7 @@ double autonomySpeed = 1.0;
 double joyToSpeedDelay = 2.0;
 double joyToCheckObstacleDelay = 5.0;
 double goalClearRange = 0.5;
+double goalReachedDist = 0.2;
 double goalX = 0;
 double goalY = 0;
 
@@ -456,7 +458,7 @@ void readPathList()
 
 void readCorrespondences()
 {
-  string fileName = pathFolder + "/correspondences.txt";
+  string fileName = pathFolder + "/" + correspondenceFile + ".txt";
 
   FILE *filePtr = fopen(fileName.c_str(), "r");
   if (filePtr == NULL) {
@@ -499,6 +501,7 @@ int main(int argc, char** argv)
   ros::NodeHandle nhPrivate = ros::NodeHandle("~");
 
   nhPrivate.getParam("pathFolder", pathFolder);
+  nhPrivate.getParam("correspondenceFile", correspondenceFile);
   nhPrivate.getParam("vehicleLength", vehicleLength);
   nhPrivate.getParam("vehicleWidth", vehicleWidth);
   nhPrivate.getParam("sensorOffsetX", sensorOffsetX);
@@ -535,6 +538,7 @@ int main(int argc, char** argv)
   nhPrivate.getParam("joyToSpeedDelay", joyToSpeedDelay);
   nhPrivate.getParam("joyToCheckObstacleDelay", joyToCheckObstacleDelay);
   nhPrivate.getParam("goalClearRange", goalClearRange);
+  nhPrivate.getParam("goalReachedDist", goalReachedDist);
   nhPrivate.getParam("goalX", goalX);
   nhPrivate.getParam("goalY", goalY);
 
@@ -696,7 +700,7 @@ int main(int argc, char** argv)
         float relativeGoalY = (-(goalX - vehicleX) * sinVehicleYaw + (goalY - vehicleY) * cosVehicleYaw);
 
         relativeGoalDis = sqrt(relativeGoalX * relativeGoalX + relativeGoalY * relativeGoalY);
-        if(relativeGoalDis < 0.1) goalReached = true;
+        if(relativeGoalDis < goalReachedDist) goalReached = true;
         joyDir = atan2(relativeGoalY, relativeGoalX) * 180 / PI;
 
         if (!twoWayDrive) {
