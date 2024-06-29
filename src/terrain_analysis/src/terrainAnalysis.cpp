@@ -330,6 +330,13 @@ int main(int argc, char **argv) {
       for (int i = 0; i < laserCloudCropSize; i++) {
         point = laserCloudCrop->points[i];
 
+        // filter out the lidar cloud
+        double dist = std::sqrt((point.x - vehicleX) * (point.x - vehicleX) + (point.y - vehicleY) * (point.y - vehicleY));
+        if (dist < 0.2)
+        {
+          continue;
+        }       
+
         int indX = int((point.x - vehicleX + terrainVoxelSize / 2) /
                        terrainVoxelSize) +
                    terrainVoxelHalfWidth;
