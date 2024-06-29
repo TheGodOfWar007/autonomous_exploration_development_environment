@@ -111,7 +111,7 @@ pause(1.0);
 %% find correspondence
 %{.
 voxelSize = 0.02;
-searchRadius = 0.75;
+searchRadius = 0.9;
 offsetX = 3.2;
 offsetY = 4.5;
 voxelNumX = 161;
@@ -144,7 +144,7 @@ fprintf('\nCollision checking\n');
 
 fprintf('\nSaving correspondences\n');
 
-fileID = fopen('correspondences_75.txt', 'w');
+fileID = fopen('correspondences_9.txt', 'w');
 
 for i = 1 : voxelPointNum
     fprintf(fileID, '%d ', i - 1);
