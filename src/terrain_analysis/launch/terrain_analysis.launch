@@ -3,7 +3,7 @@
   <arg name="vehicleHeight" default="0.75"/>
   <node pkg="terrain_analysis" type="terrainAnalysis" name="terrainAnalysis" output="screen" required="true">
     <param name="scanVoxelSize" type="double" value="0.2" />
-    <param name="decayTime" type="double" value="1.0" />
+    <param name="decayTime" type="double" value="5.0" />
     <param name="noDecayDis" type="double" value="0.0" />
     <param name="clearingDis" type="double" value="8.0" />
     <param name="useSorting" type="bool" value="true" />

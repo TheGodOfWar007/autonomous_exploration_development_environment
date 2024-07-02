@@ -234,7 +234,7 @@ int main(int argc, char** argv)
     else if (joySpeed > 1.0) joySpeed = 1.0;
   }
 
-  ros::Rate rate(100);
+  ros::Rate rate(50);
   bool status = ros::ok();
   while (status) {
     ros::spinOnce();

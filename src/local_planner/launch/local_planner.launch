@@ -34,7 +34,7 @@
     <param name="costHeightThre" type="double" value="0.2" />
     <param name="costScore" type="double" value="0.02" />
     <param name="useCost" type="bool" value="false" />
-    <param name="pointPerPathThre" type="int" value="7" />
+    <param name="pointPerPathThre" type="int" value="5" />
     <param name="minRelZ" type="double" value="-0.5" />
     <param name="maxRelZ" type="double" value="0.25" />
     <param name="maxSpeed" value="$(arg maxSpeed)" />
