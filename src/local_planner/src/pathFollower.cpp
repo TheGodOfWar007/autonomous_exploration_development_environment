@@ -95,7 +95,7 @@ nav_msgs::Path path;
 
 void odomHandler(const nav_msgs::Odometry::ConstPtr& odomIn)
 {
-  odomTime = odomIn->header.stamp.toSec();
+  odomTime = ros::Time::now().toSec();
 
   double roll, pitch, yaw;
   geometry_msgs::Quaternion geoQuat = odomIn->pose.pose.orientation;

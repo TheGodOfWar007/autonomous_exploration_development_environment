@@ -129,7 +129,7 @@ pcl::VoxelGrid<pcl::PointXYZI> laserDwzFilter, terrainDwzFilter;
 
 void odometryHandler(const nav_msgs::Odometry::ConstPtr& odom)
 {
-  odomTime = odom->header.stamp.toSec();
+  odomTime = ros::Time::now().toSec();
 
   double roll, pitch, yaw;
   geometry_msgs::Quaternion geoQuat = odom->pose.pose.orientation;
