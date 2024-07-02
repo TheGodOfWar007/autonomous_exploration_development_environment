@@ -165,7 +165,9 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloud2) {
                      (pointY - vehicleY) * (pointY - vehicleY));
     if (pointZ - vehicleZ > minRelZ - disRatioZ * dis &&
         pointZ - vehicleZ < maxRelZ + disRatioZ * dis &&
-        dis < terrainVoxelSize * (terrainVoxelHalfWidth + 1)) {
+        dis < terrainVoxelSize * (terrainVoxelHalfWidth + 1) && 
+        dis > 0.5) 
+    {
       point.x = pointX;
       point.y = pointY;
       point.z = pointZ;
@@ -332,10 +334,10 @@ int main(int argc, char **argv) {
 
         // filter out the lidar cloud
         double dist = std::sqrt((point.x - vehicleX) * (point.x - vehicleX) + (point.y - vehicleY) * (point.y - vehicleY));
-        if (dist < 0.2)
-        {
-          continue;
-        }       
+        // if (dist < 0.2)
+        // {
+        //   continue;
+        // }       
 
         int indX = int((point.x - vehicleX + terrainVoxelSize / 2) /
                        terrainVoxelSize) +

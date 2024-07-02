@@ -95,7 +95,7 @@ nav_msgs::Path path;
 
 void odomHandler(const nav_msgs::Odometry::ConstPtr& odomIn)
 {
-  odomTime = odomIn->header.stamp.toSec();
+  odomTime = ros::Time::now().toSec();
 
   double roll, pitch, yaw;
   geometry_msgs::Quaternion geoQuat = odomIn->pose.pose.orientation;
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
     else if (joySpeed > 1.0) joySpeed = 1.0;
   }
 
-  ros::Rate rate(100);
+  ros::Rate rate(50);
   bool status = ros::ok();
   while (status) {
     ros::spinOnce();
