@@ -4,7 +4,8 @@
   <node pkg="terrain_analysis" type="terrainAnalysis" name="terrainAnalysis" output="screen" required="true">
     <param name="scanVoxelSize" type="double" value="0.2" />
     <param name="decayTime" type="double" value="5.0" />
-    <param name="noDecayDis" type="double" value="0.0" />
+    <!-- Increase this value to keep fine obstacles for longer, for eg: backpack -->
+    <param name="noDecayDis" type="double" value="2.5" />
     <param name="clearingDis" type="double" value="8.0" />
     <param name="useSorting" type="bool" value="true" />
     <param name="quantileZ" type="double" value="0.25" />
